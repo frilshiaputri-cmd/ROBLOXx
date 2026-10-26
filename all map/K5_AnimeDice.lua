@@ -1,5 +1,5 @@
 -- K5-HUB | Anime Dice feature panel (authorized-game adapter)
--- UI is based on the Airflow interface already used in IronCodexFarm.
+-- UI uses the shared Airflow interface style used in IronCodexFarm, with adaptive sizing for mobile.
 -- IMPORTANT: this client panel only sends requests to a server API owned by your game.
 -- It does not guess or invoke private remotes from third-party games.
 
@@ -37,14 +37,16 @@ local Window = Airflow:CreateWindow({
     Icon = LOGO,
     ToggleUIKeybind = "RightShift",
     Backdrop = {Weather = "None", Tint = 0.45},
-    AdaptiveSize = false,
+    AdaptiveSize = true,
     UIScale = 1,
     Density = "Default",
-    Size = UDim2.fromOffset(700, 430),
+    Size = UDim2.fromOffset(620, 400),
     ConfigurationSaving = {Enabled = true, FolderName = "K5HUB_AnimeDice"},
 })
 
 local function installAirflowCompat(tab)
+    -- Keep the existing control callbacks while adapting the old groupbox-style calls
+    -- to the shared Airflow Section API.
     tab.CreateGroupbox = function(self, options)
         self:Section(type(options) == "table" and (options.Name or options.Title) or tostring(options or ""))
         return self
@@ -86,10 +88,20 @@ local apiFolder = ReplicatedStorage:FindFirstChild(API_FOLDER_NAME)
 local requestEvent = apiFolder and apiFolder:FindFirstChild(REQUEST_EVENT_NAME)
 local statusEvent = apiFolder and apiFolder:FindFirstChild(STATUS_EVENT_NAME)
 
+local statusConnection
 local function refreshStatus()
     apiFolder = ReplicatedStorage:FindFirstChild(API_FOLDER_NAME)
     requestEvent = apiFolder and apiFolder:FindFirstChild(REQUEST_EVENT_NAME)
     statusEvent = apiFolder and apiFolder:FindFirstChild(STATUS_EVENT_NAME)
+    if statusEvent and statusEvent:IsA("RemoteEvent") and (not statusConnection or statusConnection.Connected == false) then
+        statusConnection = statusEvent.OnClientEvent:Connect(function(message)
+            if type(message) == "table" and message.message then
+                notify("K5-HUB Status", tostring(message.message))
+            elseif type(message) == "string" then
+                notify("K5-HUB Status", message)
+            end
+        end)
+    end
     local connected = requestEvent and requestEvent:IsA("RemoteEvent")
     pcall(function()
         statusLabel:Set(connected and "Backend: connected" or "Backend: not installed")
@@ -118,16 +130,6 @@ local function request(feature, enabled, extra)
         return false
     end
     return true
-end
-
-if statusEvent and statusEvent:IsA("RemoteEvent") then
-    statusEvent.OnClientEvent:Connect(function(message)
-        if type(message) == "table" and message.message then
-            notify("K5-HUB Status", tostring(message.message))
-        elseif type(message) == "string" then
-            notify("K5-HUB Status", message)
-        end
-    end)
 end
 
 local function addFeature(group, name, featureKey, description)
