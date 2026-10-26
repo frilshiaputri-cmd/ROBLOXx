@@ -10,7 +10,7 @@ if not LocalPlayer then
     error("[K5-HUB Anime Dice] LocalPlayer unavailable")
 end
 
-local AIRFLOW_URL = "https://raw.githubusercontent.com/joustingmatch/-3/refs/heads/main/Source.luau"
+local AIRFLOW_URL = "https://raw.githubusercontent.com/PookiePepelsss/Airflow-UI/refs/heads/main/Source.luau"
 local LOGO = "rbxassetid://115820469332666"
 local API_FOLDER_NAME = "K5AnimeDiceRemotes"
 local REQUEST_EVENT_NAME = "Request"
@@ -30,6 +30,9 @@ end
 
 local Window = Airflow:CreateWindow({
     Name = "K5-HUB",
+    Theme = "Midnight",
+    OpenButton = {Title = "K5-HUB", Icon = "dice"},
+    KeepOnScreen = true,
     LoadingSubtitle = "Anime Dice • Feature Controller",
     Icon = LOGO,
     ToggleUIKeybind = "RightShift",
@@ -41,14 +44,29 @@ local Window = Airflow:CreateWindow({
     ConfigurationSaving = {Enabled = true, FolderName = "K5HUB_AnimeDice"},
 })
 
-local MainTab = Window:CreateTab({Name = "Main", Icon = "house"})
-local FarmTab = Window:CreateTab({Name = "Auto Farm", Icon = "zap"})
-local EconomyTab = Window:CreateTab({Name = "Economy", Icon = "coins"})
-local TowerTab = Window:CreateTab({Name = "Tower", Icon = "castle"})
-local UnitsTab = Window:CreateTab({Name = "Units", Icon = "users"})
-local RewardsTab = Window:CreateTab({Name = "Rewards", Icon = "gift"})
-local UtilityTab = Window:CreateTab({Name = "Utilities", Icon = "settings"})
-local SettingsTab = Window:CreateTab({Name = "Settings", Icon = "sliders-horizontal"})
+local function installAirflowCompat(tab)
+    tab.CreateGroupbox = function(self, options)
+        self:Section(type(options) == "table" and (options.Name or options.Title) or tostring(options or ""))
+        return self
+    end
+    tab.CreateLabel = tab.Label
+    tab.CreateParagraph = tab.Paragraph
+    tab.CreateButton = tab.Button
+    tab.CreateToggle = tab.Toggle
+    tab.CreateSlider = tab.Slider
+    tab.CreateDropdown = tab.Dropdown
+    tab.CreateInput = tab.Input
+    return tab
+end
+
+local MainTab = installAirflowCompat(Window:CreateTab({Name = "Main", Icon = "house"}))
+local FarmTab = installAirflowCompat(Window:CreateTab({Name = "Auto Farm", Icon = "zap"}))
+local EconomyTab = installAirflowCompat(Window:CreateTab({Name = "Economy", Icon = "coins"}))
+local TowerTab = installAirflowCompat(Window:CreateTab({Name = "Tower", Icon = "castle"}))
+local UnitsTab = installAirflowCompat(Window:CreateTab({Name = "Units", Icon = "users"}))
+local RewardsTab = installAirflowCompat(Window:CreateTab({Name = "Rewards", Icon = "gift"}))
+local UtilityTab = installAirflowCompat(Window:CreateTab({Name = "Utilities", Icon = "settings"}))
+local SettingsTab = installAirflowCompat(Window:CreateTab({Name = "Settings", Icon = "sliders-horizontal"}))
 
 local StatusGroup = MainTab:CreateGroupbox({Name = "Connection Status", Side = "Left"})
 local InfoGroup = MainTab:CreateGroupbox({Name = "About", Side = "Right"})
