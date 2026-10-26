@@ -4,7 +4,7 @@
 -- Pastikan hanya digunakan di experience yang kamu miliki atau punya izin untuk mengembangkan.
 
 local SOURCES = {
-    Foresters = "https://raw.githubusercontent.com/frilshiaputri-cmd/Foresters/main/farm_hub.lua",
+    Foresters = "https://raw.githubusercontent.com/frilshiaputri-cmd/Foresters/refs/heads/main/farm_hub.lua",
     AnimeDice = "https://raw.githubusercontent.com/frilshiaputri-cmd/ROBLOXx/main/all%20map/K5_AnimeDice.lua",
 }
 
