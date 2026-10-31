@@ -37,3 +37,13 @@ Payload example:
 This repository contains the client UI and loader. A game-specific server controller is still required for an experience you own or are authorized to develop. The UI does not guess private remotes or claim gameplay automation is already implemented. Server code must validate requests, enforce cooldowns and permissions, and never trust the client to grant currency, items, levels, or rewards.
 
 Without the backend adapter, the UI loads but reports that the backend is missing.
+
+## DeepFish (Fisch UI scaffold)
+
+- Standalone UI script: `all map/K5_DeepFish.lua`
+- Standalone loader: `DEEPFISH_LOADER.lua`
+- Loader URL: https://raw.githubusercontent.com/frilshiaputri-cmd/ROBLOXx/main/DEEPFISH_LOADER.lua
+- Main script URL: https://raw.githubusercontent.com/frilshiaputri-cmd/ROBLOXx/main/all%20map/K5_DeepFish.lua
+- UI library: Airflow-UI, matching the library used by the Foresters repository.
+
+**Status:** UI, tabs, toggles, and config export only. Auto fishing, cast/shake/reel detection, pixel tracking, and special-rod routines are not implemented. Existing `LOADER.lua` is unchanged.
